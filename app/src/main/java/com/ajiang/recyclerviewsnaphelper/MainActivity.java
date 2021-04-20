@@ -1,6 +1,7 @@
 package com.ajiang.recyclerviewsnaphelper;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,16 +58,31 @@ public class MainActivity extends AppCompatActivity implements CustomAdapt {
         mRvTop = (RecyclerView) findViewById(R.id.rv_top);
         mRvContent = (RecyclerView) findViewById(R.id.rv_content);
         contentManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        topManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false){
-            @Override
-            public boolean canScrollHorizontally() {
-                return false;
-            }
-        };
+        topManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
         mRvTop.setLayoutManager(topManager);
         mRvContent.setLayoutManager(contentManager);
         mRvTop.addItemDecoration(new TopItemDecoration(this));
         mRvContent.addItemDecoration(new ContentItemDecoration(this));
+        PagerSnapHelper snapHelperTop=new PagerSnapHelper();
+        snapHelperTop.attachToRecyclerView(mRvTop);
+        PagerSnapHelper snapHelperContent=new PagerSnapHelper();
+        snapHelperContent.attachToRecyclerView(mRvContent);
+        mRvTop.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
         mRvTop.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -115,10 +131,7 @@ public class MainActivity extends AppCompatActivity implements CustomAdapt {
                 }
             }
         });
-        PagerSnapHelper snapHelperTop=new PagerSnapHelper();
-        snapHelperTop.attachToRecyclerView(mRvTop);
-        PagerSnapHelper snapHelperContent=new PagerSnapHelper();
-        snapHelperContent.attachToRecyclerView(mRvContent);
+
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
